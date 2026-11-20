@@ -27,26 +27,30 @@ td:last-child{color:#22c55e;font-weight:bold;text-align:right}
 .league-pills{display:flex;gap:8px;overflow-x:auto;margin-bottom:12px;white-space:nowrap}
 .league-pills button{padding:8px 14px;border-radius:20px;border:none;background:#334155;color:white;cursor:pointer;white-space:nowrap}
 .league-pills button.active{background:#22c55e;color:black;font-weight:bold}
-.bottom{position:fixed;bottom:0;left:0;right:0;background:#1e293b;display:flex;justify-content:space-around;padding:10px 0;border-top:1px solid #334155}
-.bottom div{text-align:center;font-size:12px;color:#94a3b8}
+.match{display:flex;justify-content:space-between;align-items:center;padding:12px 4px;border-top:1px solid #334155}
+.match b{flex:1}.live-dot{color:#ef4444;font-weight:bold;font-size:12px}
+.watch-box{background:#0f172a;border-radius:12px;padding:30px 10px;text-align:center;margin-bottom:12px;font-size:40px}
+.watch-box p{font-size:13px;color:#94a3b8;margin-top:8px}
+.btn-green{background:#22c55e;color:white;border:none;padding:12px;width:100%;border-radius:10px;font-weight:bold;margin-top:10px;cursor:pointer}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:#1e293b;display:flex;justify-content:space-around;padding:10px 0;border-top:1px solid #334155;z-index:99}
+.bottom div{text-align:center;font-size:12px;color:#94a3b8;cursor:pointer;flex:1;padding:4px 0}
 .bottom div.active{color:#22c55e}
+.page{display:none}.page.active{display:block}
 </style>
 </head>
 <body>
 
-<div class="header"><b>Stream<span>Ball</span></b><span>🔔 👤</span></div>
+<div class="header"><b>Stream<span>Ball</span></b><span onclick="showPage('profile')" style="cursor:pointer">🔔 👤</span></div>
+
+<!-- HOME PAGE -->
+<div id="page-home" class="page active">
 <input class="search" placeholder="Search teams, players...">
 <div class="tabs" id="leagueTabs"></div>
-
 <div class="card">
 <h3>Standings</h3>
-<table>
-<thead><tr><th>#</th><th>Team</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GD</th><th>Pts</th></tr></thead>
-<tbody id="standBody"></tbody>
-</table>
+<table><thead><tr><th>#</th><th>Team</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GD</th><th>Pts</th></tr></thead><tbody id="standBody"></tbody></table>
 <div class="updated2">✅ Updated 20 Nov 2026 • Auto-Fetch tries in background • If offline, shows last saved table</div>
 </div>
-
 <div class="card">
 <h3>⚽ Top Scorers</h3>
 <div class="updated">✅ Updated 20 Nov 2026</div>
@@ -55,20 +59,67 @@ td:last-child{color:#22c55e;font-weight:bold;text-align:right}
 <button id="btnAssists" onclick="setTop('assists')">🎯 Assists</button>
 </div>
 <div class="league-pills" id="topLeaguePills"></div>
-<table>
-<thead><tr><th>#</th><th>Player</th><th>Team</th><th id="topColHead" style="text-align:right">Goals</th></tr></thead>
-<tbody id="topBody"></tbody>
-</table>
+<table><thead><tr><th>#</th><th>Player</th><th>Team</th><th id="topColHead" style="text-align:right">Goals</th></tr></thead><tbody id="topBody"></tbody></table>
+</div>
+</div>
+
+<!-- FIXTURES PAGE -->
+<div id="page-fixtures" class="page">
+<div class="card"><h3>📅 Fixtures</h3>
+<div class="match"><b>Arsenal vs Chelsea</b><span>Sat 22 Nov • 18:30</span></div>
+<div class="match"><b>Man City vs Liverpool</b><span>Sun 23 Nov • 17:30</span></div>
+<div class="match"><b>Real Madrid vs Barcelona</b><span>Sun 23 Nov • 21:00</span></div>
+<div class="match"><b>Bayern vs Leipzig</b><span>Sat 22 Nov • 19:30</span></div>
+</div>
+</div>
+
+<!-- LIVE PAGE -->
+<div id="page-live" class="page">
+<div class="card"><h3>🔴 Live Now</h3>
+<div class="match"><b>Tottenham 1 - 1 Newcastle</b><span class="live-dot">● 67'</span></div>
+<div class="match"><b>Man United 2 - 0 Fulham</b><span class="live-dot">● 54'</span></div>
+<div class="match"><b>Brighton 0 - 0 Brentford</b><span class="live-dot">● 32'</span></div>
+</div>
+</div>
+
+<!-- WATCH PAGE -->
+<div id="page-watch" class="page">
+<div class="card"><h3>▶️ Watch</h3>
+<div class="watch-box">▶️<p>Arsenal 3-1 Chelsea - Highlights</p><button class="btn-green" onclick="alert('Video will play here - add your link!')">▶ Play Highlights</button></div>
+<div class="watch-box">▶️<p>Haaland All Goals This Season</p><button class="btn-green" onclick="alert('Video will play here - add your link!')">▶ Play Video</button></div>
+</div>
+</div>
+
+<!-- PROFILE PAGE -->
+<div id="page-profile" class="page">
+<div class="card"><h3>👤 Profile</h3>
+<p style="font-size:40px;text-align:center">👤</p><p style="text-align:center;margin:8px 0">Guest User</p>
+<p style="color:#94a3b8;text-align:center;font-size:13px">Favourite Team: Arsenal</p>
+<button class="btn-green" onclick="alert('Login coming soon!')">Login / Sign Up</button>
+<button class="btn-green" style="background:#334155" onclick="showPage('home')">Back to Home</button>
+</div>
 </div>
 
 <div class="bottom">
-<div class="active">🏠<br>Home</div><div>📅<br>Fixtures</div><div>🔴<br>Live</div><div>▶️<br>Watch</div><div>👤<br>Profile</div>
+<div id="nav-home" class="active" onclick="showPage('home')">🏠<br>Home</div>
+<div id="nav-fixtures" onclick="showPage('fixtures')">📅<br>Fixtures</div>
+<div id="nav-live" onclick="showPage('live')">🔴<br>Live</div>
+<div id="nav-watch" onclick="showPage('watch')">▶️<br>Watch</div>
+<div id="nav-profile" onclick="showPage('profile')">👤<br>Profile</div>
 </div>
 
 <script>
 var curLeague = "Premier League";
 var curTopLeague = "Premier League";
 var curTop = "scorers";
+function showPage(p){
+var pages = ["home","fixtures","live","watch","profile"];
+for(var i=0;i<pages.length;i++){
+document.getElementById("page-"+pages[i]).className = "page" + (pages[i]===p ? " active" : "");
+document.getElementById("nav-"+pages[i]).className = pages[i]===p ? "active" : "";
+}
+window.scrollTo(0,0);
+}
 var standings = {
 "Premier League":[
 ["Arsenal",10,8,2,0,14,26],["Man City",10,7,2,1,10,23],["Chelsea",10,6,2,2,5,20],
