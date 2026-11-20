@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StreamBall - My Team</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:#0f172a;color:white;padding-bottom:80px}
+.search-wrap{padding:14px}
+.search{width:100%;background:#1e293b;border:1px solid #334155;color:white;padding:13px;border-radius:12px;outline:none}
+.tabs{display:flex;gap:8px;padding:0 14px 14px;overflow-x:auto}
+.tabs button{background:#1e293b;color:white;border:1px solid #334155;padding:9px 16px;border-radius:20px;white-space:nowrap}
+.tabs button.active{background:#22c55e;color:black;font-weight:bold}
+.section{padding:0 14px}
+.card{background:#1e293b;border:1px solid #334155;border-radius:14px;padding:14px;margin-bottom:12px}
+.card.next{border-left:4px solid #fbbf24}
+.card.news{border-left:4px solid #3b82f6}
+.btn{padding:11px;border:none;border-radius:10px;font-weight:bold;cursor:pointer;flex:1}
+.btn-green{background:#22c55e;color:black}
+.btn-grey{background:#334155;color:white}
+.row{display:flex;gap:8px;margin-top:10px}
+.muted{color:#94a3b8;font-size:12px}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#111827;display:flex;padding:8px 0 6px;border-top:1px solid #334155}
+.nav a{color:#94a3b8;text-decoration:none;text-align:center;font-size:10px;flex:1}
+.nav a.active{color:#22c55e}
+.nav span{display:block;font-size:19px}
+.score{font-size:28px;font-weight:bold;text-align:center}
+</style>
+</head>
+<body>
+<div class="search-wrap"><input class="search" placeholder="🔍 Search team..." oninput="searchTeam(this.value)"><div id="searchRes"></div></div>
+<div class="tabs"><button class="active">⭐ My Team</button><button onclick="location.href='live.html'">🔴 Live</button><button onclick="location.href='fixtures.html'">📅 Fixtures</button></div>
+<div class="section">
+<h3 id="teamTitle" style="color:#fbbf24">⭐ Arsenal - Live & Next</h3>
+<div class="card"><h4 style="color:#94a3b8">⚪ No Live Game Right Now</h4><p class="muted" style="margin-top:6px" id="liveStatus">Arsenal are not playing right now.</p><div class="row"><button class="btn btn-grey" onclick="location.href='live.html'">🔴 Check Live Scores</button><button class="btn btn-grey" onclick="location.href='fixtures.html'">📅 All Fixtures</button></div></div>
+<div class="card next"><h4 style="color:#fbbf24">🏆 PREMIER LEAGUE • NEXT</h4><p style="text-align:right" class="muted">📅 SAT 21 NOV</p><div style="display:flex;justify-content:space-between;align-items:center;margin:12px 0"><div style="text-align:center;flex:1"><div style="font-size:32px">⚫</div><b id="homeTeam">Newcastle</b></div><div style="text-align:center"><div class="score">VS</div><span class="muted" id="kickoff">18:30 • St James Park</span></div><div style="text-align:center;flex:1"><div style="font-size:32px">🔴</div><b id="awayTeam">Arsenal</b></div></div><p class="muted" style="text-align:center" id="derbyNote">Arsenal travel to Newcastle - Top vs 12th!</p><div class="row"><button class="btn btn-green" onclick="remindMe()">🔔 Remind Me</button><button class="btn btn-grey" onclick="location.href='fixtures.html'">📅 All Fixtures</button></div></div>
+<div class="card news"><h4 style="color:#fbbf24">📰 <span id="newsTeam">ARSENAL</span> NEWS</h4><p class="muted" style="text-align:right">Updated 20 Nov 2026</p><div id="newsList" style="margin-top:8px;line-height:1.8"></div><button class="btn btn-green" style="width:100%;margin-top:10px" onclick="location.href='home.html'">📰 Read More News</button></div>
+<div style="text-align:center;margin-top:10px"><button onclick="changeTeam()" style="background:#1e293b;color:white;border:1px solid #334155;padding:12px 20px;border-radius:20px">🔄 Change My Team</button></div>
+</div>
+<div class="nav">
+<a href="home.html"><span>🏠</span>Home</a>
+<a href="fixtures.html"><span>📅</span>Fixtures</a>
+<a href="live.html"><span>🔴</span>Live</a>
+<a href="watch.html"><span>▶️</span>Watch</a>
+<a href="myteam.html" class="active"><span>⭐</span>My Team</a>
+<a href="profile.html"><span>👤</span>Profile</a>
+</div>
+<script>
+var fav=localStorage.getItem("favTeam")||"Arsenal";
+document.getElementById("teamTitle").innerText="⭐ "+fav+" - Live & Next";
+document.getElementById("newsTeam").innerText=fav.toUpperCase()+" NEWS";
+var data={
+"Arsenal":{home:"Newcastle",away:"Arsenal",kick:"18:30 • St James Park",date:"SAT 21 NOV",note:"Arsenal travel to Newcastle - Top vs 12th - Arsenal can go 8 pts clear!",live:"Arsenal are not playing right now. Next: Newcastle vs Arsenal Sat 21 Nov. Arsenal top with 27 pts.",news:["📰 Arsenal top Premier League with 27 pts from 10 games","📰 Arsenal travel to Newcastle on Sat 21 Nov","📰 Saka & Odegaard fit for Newcastle trip"]},
+"Man City":{home:"Man City",away:"Fulham",kick:"18:30 • Etihad",date:"SAT 21 NOV",note:"Man City host Fulham - Must win to stay close to Arsenal",live:"Man City are not playing now. Next: Man City vs Fulham Sat 21 Nov.",news:["📰 Man City 3rd with 21 pts","📰 Haaland top scorer with 9 goals"]},
+"Liverpool":{home:"Liverpool",away:"Man United",kick:"19:30 • Anfield",date:"SUN 22 NOV",note:"Biggest game in England! Liverpool vs Man United!",live:"Liverpool are not playing now. Next: Liverpool vs Man United Sun 22 Nov.",news:["📰 Liverpool 4th with 18 pts","📰 Man United in 18th!"]},
+"Man United":{home:"Liverpool",away:"Man United",kick:"19:30 • Anfield",date:"SUN 22 NOV",note:"Man United travel to Anfield - Must win to escape relegation zone!",live:"Man United are not playing now. Next: Liverpool vs Man United Sun 22 Nov. Man United 18th with 8 pts.",news:["📰 Man United 18th with 8 pts","📰 Pressure on Man United"]},
+"Chelsea":{home:"Chelsea",away:"Leeds",kick:"18:30 • Stamford Bridge",date:"SAT 21 NOV",note:"Chelsea host Leeds - Chelsea 5th with 16 pts",live:"Chelsea are not playing now. Next: Chelsea vs Leeds Sat 21 Nov.",news:["📰 Chelsea 5th with 16 pts"]},
+"KCCA FC":{home:"KCCA FC",away:"URA FC",kick:"16:00 • MTN Omondi Stadium",date:"SAT 22 NOV",note:"UPL - KCCA vs URA - Kampala Derby!",live:"KCCA are not playing now. Next: KCCA vs URA Sat 22 Nov. KCCA 5th with 20 pts in UPL.",news:["📰 KCCA FC 5th in UPL with 20 pts","📰 BUL & NEC top UPL with 26 pts"]},
+"Vipers SC":{home:"Vipers SC",away:"BUL FC",kick:"16:00 • St Mary's Stadium",date:"SUN 23 NOV",note:"UPL - Vipers vs BUL - Top clash!",live:"Vipers are not playing now. Next: Vipers vs BUL Sun 23 Nov.",news:["📰 Vipers 6th in UPL with 17 pts"]},
+"Barcelona":{home:"Barcelona",away:"Villarreal",kick:"14:00 • Camp Nou",date:"SUN 22 NOV",note:"Barcelona host Villarreal - Top with 33 pts",live:"Barcelona are not playing now. Next: Barcelona vs Villarreal Sun 22 Nov.",news:["📰 Barcelona top LaLiga with 33 pts"]},
+"Real Madrid":{home:"Real Madrid",away:"Celta Vigo",kick:"21:00 • Bernabeu",date:"SAT 21 NOV",note:"Real Madrid host Celta - 2nd with 30 pts",live:"Real Madrid are not playing now. Next: Real Madrid vs Celta Sat 21 Nov.",news:["📰 Real Madrid 2nd with 30 pts"]}
+};
+var d=data[fav]||data["Arsenal"];
+document.getElementById("homeTeam").innerText=d.home; document.getElementById("awayTeam").innerText=d.away; document.getElementById("kickoff").innerText=d.kick; document.getElementById("derbyNote").innerText=d.note; document.getElementById("liveStatus").innerText=d.live; document.getElementById("newsList").innerHTML=d.news.map(function(n){return "<p>"+n+"</p>";}).join("");
+function remindMe(){alert("✅ Reminder set for "+d.home+" vs "+d.away+" on "+d.date);}
+function changeTeam(){var t=prompt("Your favourite team? (Arsenal, Man City, Liverpool, Man United, Chelsea, KCCA FC, Vipers SC, Barcelona, Real Madrid)",fav); if(t){localStorage.setItem("favTeam",t); location.reload();}}
+function searchTeam(q){var box=document.getElementById("searchRes"); if(q.length<2){box.innerHTML="";return;} box.innerHTML="<div style='background:#1e293b;padding:10px;border-radius:10px;margin-top:8px' onclick=\"localStorage.setItem('favTeam','"+q+"');location.reload()\">Set My Team to <b>"+q+"</b></div>";}
+</script>
+</body>
+</html>

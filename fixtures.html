@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StreamBall - Fixtures</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:#0f172a;color:white;padding-bottom:80px}
+.header{background:#16a34a;padding:16px;text-align:center}
+.search-wrap{padding:14px}
+.search{width:100%;background:#1e293b;border:1px solid #334155;color:white;padding:13px;border-radius:12px;outline:none}
+.tabs{display:flex;gap:6px;padding:0 14px 14px;overflow-x:auto}
+.tabs button{background:#1e293b;color:white;border:1px solid #334155;padding:9px 14px;border-radius:20px;white-space:nowrap;font-size:12px}
+.tabs button.active{background:#22c55e;color:black;font-weight:bold}
+.section{padding:0 14px}
+.card{background:#1e293b;border:1px solid #334155;border-radius:14px;padding:14px;margin-bottom:10px}
+.muted{color:#94a3b8;font-size:12px}
+.btn{padding:11px;border:none;border-radius:10px;font-weight:bold;cursor:pointer;flex:1}
+.btn-green{background:#22c55e;color:black}
+.btn-grey{background:#334155;color:white}
+.row{display:flex;gap:8px;margin-top:10px}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#111827;display:flex;padding:8px 0 6px;border-top:1px solid #334155}
+.nav a{color:#94a3b8;text-decoration:none;text-align:center;font-size:10px;flex:1}
+.nav a.active{color:#22c55e}
+.nav span{display:block;font-size:19px}
+</style>
+</head>
+<body>
+<div class="header"><h1>📅 Fixtures</h1><p>● <span id="updateTime">Updated 20 Nov 2026 • Auto</span></p></div>
+<div class="search-wrap"><input class="search" id="searchBox" placeholder="🔍 Search team..." oninput="doSearch()"></div>
+<div class="tabs" id="leagueTabs"></div>
+<div class="section"><div id="fixtureList"></div></div>
+<div class="nav">
+<a href="home.html"><span>🏠</span>Home</a>
+<a href="fixtures.html" class="active"><span>📅</span>Fixtures</a>
+<a href="live.html"><span>🔴</span>Live</a>
+<a href="watch.html"><span>▶️</span>Watch</a>
+<a href="profile.html"><span>👤</span>Profile</a>
+</div>
+<script>
+var LEAGUES={"Premier League":"eng.1","LaLiga":"esp.1","Serie A":"ita.1","Bundesliga":"ger.1","Ligue 1":"fra.1","UPL 🇺🇬":"manual"};
+var FIXTURES={
+"Premier League":[["Newcastle","Arsenal","2026-11-21T18:30:00+03:00","St James Park"],["Man City","Fulham","2026-11-21T18:30:00+03:00","Etihad"],["Chelsea","Leeds","2026-11-21T18:30:00+03:00","Stamford Bridge"],["Liverpool","Man United","2026-11-22T19:30:00+03:00","Anfield"],["Tottenham","Brentford","2026-11-22T17:00:00+03:00","Tottenham Stadium"]],
+"LaLiga":[["Real Madrid","Celta Vigo","2026-11-21T21:00:00+03:00","Bernabeu"],["Barcelona","Villarreal","2026-11-22T14:00:00+03:00","Camp Nou"],["Real Betis","Sevilla","2026-11-21T18:30:00+03:00","Benito Villamarin"]],
+"Serie A":[["Como","Cagliari","2026-11-21T15:00:00+03:00","Stadio Sinigaglia"],["Lazio","Lecce","2026-11-21T15:00:00+03:00","Olimpico"],["Juventus","Venezia","2026-11-22T12:30:00+03:00","Allianz Stadium"]],
+"Bundesliga":[["Bayern","Koln","2026-11-21T17:30:00+03:00","Allianz Arena"],["Dortmund","Gladbach","2026-11-22T17:30:00+03:00","Signal Iduna"]],
+"Ligue 1":[["Nice","PSG","2026-11-21T17:15:00+03:00","Allianz Riviera"],["Lille","Lyon","2026-11-21T20:45:00+03:00","Pierre Mauroy"],["Marseille","Le Mans","2026-11-22T20:45:00+03:00","Velodrome"]],
+"UPL 🇺🇬":[["KCCA FC","URA FC","2026-11-22T16:00:00+03:00","MTN Omondi Stadium"],["Vipers SC","BUL FC","2026-11-23T16:00:00+03:00","St Mary's Stadium"],["SC Villa","Express FC","2026-11-22T16:00:00+03:00","Mutesa II Stadium"]]
+};
+var cur="Premier League";
+function fmt(d){try{var x=new Date(d);return x.toLocaleDateString([],{weekday:'short',day:'numeric',month:'short'})+" • "+x.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}catch(e){return d;}}
+function show(league){
+  cur=league; var list=FIXTURES[league]||[]; var html="";
+  for(var i=0;i<list.length;i++){var f=list[i]; html+="<div class='card'><b>"+f[0]+" vs "+f[1]+"</b><br><span class='muted'>📅 "+fmt(f[2])+" • "+f[3]+" • "+league+"</span><div class='row'><button class='btn btn-green' onclick=\"alert('Reminder set for "+f[0]+" vs "+f[1]+"')\">🔔 Remind Me</button><button class='btn btn-grey' onclick=\"location.href='watch.html'\">📺 Where to Watch</button></div></div>";}
+  document.getElementById("fixtureList").innerHTML=html||"<p>No fixtures</p>";
+  var tabs=document.querySelectorAll("#leagueTabs button"); for(var t=0;t<tabs.length;t++){if(tabs[t].textContent===league)tabs[t].className="active";else tabs[t].className="";}
+}
+function doSearch(){var q=document.getElementById("searchBox").value.toLowerCase(); if(q.length<2){show(cur);return;} var html=""; for(var lg in FIXTURES){for(var i=0;i<FIXTURES[lg].length;i++){var f=FIXTURES[lg][i]; if((f[0]+" "+f[1]).toLowerCase().indexOf(q)!==-1){html+="<div class='card'><b>"+f[0]+" vs "+f[1]+"</b><br><span class='muted'>"+fmt(f[2])+" • "+lg+"</span></div>";}}} document.getElementById("fixtureList").innerHTML=html||"<p>No fixtures found</p>";}
+var th=""; for(var k in LEAGUES){th+="<button onclick=\"show('"+k+"')\">"+k+"</button>";} document.getElementById("leagueTabs").innerHTML=th;
+show("Premier League");
+async function tryUpdate(){
+  try{
+    var res=await fetch("https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20261121-20261129");
+    if(!res.ok) return; var data=await res.json(); var evs=data.events||[]; if(!evs.length) return;
+    var rows=[]; for(var i=0;i<evs.length;i++){var ev=evs[i]; var c=ev.competitions[0].competitors; var h=c.find(function(x){return x.homeAway==="home"}); var a=c.find(function(x){return x.homeAway==="away"}); if(h&&a) rows.push([h.team.displayName,a.team.displayName,ev.date,ev.competitions[0].venue?ev.competitions[0].venue.fullName:""]);}
+    if(rows.length){FIXTURES["Premier League"]=rows; if(cur==="Premier League") show(cur); document.getElementById("updateTime").innerText="Updated "+new Date().toLocaleDateString([],{day:'numeric',month:'short'})+" • Auto • Live from ESPN";}
+  }catch(e){console.log("ESPN blocked, keeping saved fixtures");}
+}
+tryUpdate(); setInterval(tryUpdate,5*60*1000);
+</script>
+</body>
+</html>

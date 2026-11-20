@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StreamBall - Watch</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:#0f172a;color:white;padding-bottom:80px}
+.tabs{display:flex;gap:8px;padding:14px;overflow-x:auto}
+.tabs button{background:#1e293b;color:white;border:1px solid #334155;padding:9px 16px;border-radius:20px;white-space:nowrap}
+.tabs button.active{background:#22c55e;color:black;font-weight:bold}
+.section{padding:0 14px}
+.card{background:#1e293b;border:1px solid #334155;border-radius:14px;padding:14px;margin-bottom:12px}
+.card.tv{border-left:4px solid #3b82f6}
+.muted{color:#94a3b8;font-size:12px}
+.btn{padding:11px;border:none;border-radius:10px;font-weight:bold;cursor:pointer;flex:1}
+.btn-green{background:#22c55e;color:black}
+.btn-grey{background:#334155;color:white}
+.row{display:flex;gap:8px;margin-top:10px}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#111827;display:flex;padding:8px 0 6px;border-top:1px solid #334155}
+.nav a{color:#94a3b8;text-decoration:none;text-align:center;font-size:10px;flex:1}
+.nav a.active{color:#22c55e}
+.nav span{display:block;font-size:19px}
+.warn{background:#fef3c7;color:#92400e;padding:12px;border-radius:10px;font-size:12px;line-height:1.5;margin-bottom:12px}
+</style>
+</head>
+<body>
+<div class="tabs"><button class="active">🔴 Live Now</button><button onclick="location.href='fixtures.html'">📅 Fixtures</button><button onclick="location.href='live.html'">🔴 Live Scores</button></div>
+<div class="section">
+<div class="warn">⚠️ <b>We do NOT stream matches.</b> We show you WHERE to watch legally - SuperSport, FUFA TV, etc. Never pay for illegal streams!</div>
+<h3>🔴 Live Now - Where to Watch</h3>
+<div id="watchList">
+<div class="card"><h4 style="color:#fbbf24">🏆 PREMIER LEAGUE • NEXT • SAT 21 NOV 18:30</h4><p style="margin:8px 0"><b>Newcastle vs Arsenal</b><br><span class="muted">St James Park</span></p><div style="background:#0f172a;border-radius:10px;padding:16px;text-align:center"><div style="font-size:40px">📺</div><p><b>Where to Watch:</b></p><p class="muted">SuperSport Premier League (DStv) • SuperSport App • GOtv</p></div><div class="row"><button class="btn btn-green" onclick="alert('Watch on DStv SuperSport Premier League - Sat 21 Nov 18:30')">📺 How to Watch</button><button class="btn btn-grey" onclick="location.href='live.html'">🔴 Live Scores</button></div></div>
+<div class="card"><h4 style="color:#fbbf24">🇺🇬 UPL • NEXT • SAT 22 NOV 16:00</h4><p style="margin:8px 0"><b>KCCA FC vs URA FC</b><br><span class="muted">MTN Omondi Stadium</span></p><div style="background:#0f172a;border-radius:10px;padding:16px;text-align:center"><div style="font-size:40px">📺</div><p><b>Where to Watch:</b></p><p class="muted">FUFA TV • StarTimes UPL • Sanyuka TV</p></div><div class="row"><button class="btn btn-green" onclick="alert('Watch on FUFA TV / StarTimes - Sat 22 Nov 16:00')">📺 How to Watch</button><button class="btn btn-grey" onclick="location.href='fixtures.html'">📅 Fixtures</button></div></div>
+</div>
+<h3 style="margin-top:14px">📺 TV Channels Worldwide</h3>
+<div class="card tv"><b>📺 SuperSport Premier League</b><br><span class="muted">DStv Ch 203 • GOtv • All Premier League games</span></div>
+<div class="card tv"><b>📺 FUFA TV</b><br><span class="muted">Free • All UPL games - KCCA, Vipers, BUL, SC Villa</span></div>
+<div class="card tv"><b>📺 SuperSport LaLiga</b><br><span class="muted">DStv • Barcelona, Real Madrid</span></div>
+<div class="card tv"><b>📺 beIN Sports</b><br><span class="muted">Middle East & France • Ligue 1, LaLiga</span></div>
+<div class="card tv"><b>📺 ESPN / Star+</b><br><span class="muted">USA & Latin America • Premier League, LaLiga</span></div>
+</div>
+<div class="nav">
+<a href="home.html"><span>🏠</span>Home</a>
+<a href="fixtures.html"><span>📅</span>Fixtures</a>
+<a href="live.html"><span>🔴</span>Live</a>
+<a href="watch.html" class="active"><span>▶️</span>Watch</a>
+<a href="profile.html"><span>👤</span>Profile</a>
+</div>
+</body>
+</html>

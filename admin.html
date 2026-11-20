@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StreamBall - Admin</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:#0f172a;color:white;padding:14px;padding-bottom:80px}
+.header{background:#7f1d1d;padding:16px;text-align:center;border-radius:12px;margin-bottom:14px}
+input,textarea,select{width:100%;background:#1e293b;border:1px solid #334155;color:white;padding:12px;border-radius:10px;margin-bottom:10px;outline:none}
+button{padding:12px;border:none;border-radius:10px;font-weight:bold;cursor:pointer}
+.btn-green{background:#22c55e;color:black;width:100%}
+.btn-red{background:#ef4444;color:white;width:100%;margin-top:10px}
+.btn-grey{background:#334155;color:white;width:100%;margin-top:8px}
+.card{background:#1e293b;border:1px solid #334155;border-radius:14px;padding:14px;margin-bottom:12px}
+.muted{color:#94a3b8;font-size:12px}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#111827;display:flex;padding:8px 0 6px;border-top:1px solid #334155}
+.nav a{color:#94a3b8;text-decoration:none;text-align:center;font-size:10px;flex:1}
+.nav span{display:block;font-size:19px}
+</style>
+</head>
+<body>
+<div id="loginBox">
+<div class="header"><h1>🔐 Admin Only</h1><p>StreamBall Admin Panel</p></div>
+<input type="password" id="passInput" placeholder="Enter Admin Password">
+<button class="btn-green" onclick="login()">🔓 Login</button>
+<p class="muted" style="text-align:center;margin-top:10px">Only you know this password. Never share admin link!</p>
+</div>
+
+<div id="adminBox" style="display:none">
+<div class="header"><h1>⚙️ Admin Panel</h1><p>Welcome Boss! Manage Ads & News</p></div>
+
+<h3>📢 Add Sponsored Ad</h3>
+<div class="card">
+<input id="adTitle" placeholder="Ad Title - e.g BetPawa - Win Big!">
+<input id="adBusiness" placeholder="Business Name - e.g BetPawa Uganda">
+<textarea id="adDesc" placeholder="Ad Description"></textarea>
+<input id="adPrice" placeholder="Price Paid - e.g $8 / 30,000 UGX">
+<button class="btn-green" onclick="addAd()">✅ Add Ad - Shows on Home</button>
+</div>
+
+<h3>📰 Add Breaking News</h3>
+<div class="card">
+<input id="newsTitle" placeholder="News Title - e.g Arsenal Top With 27 Pts">
+<textarea id="newsBody" placeholder="News Body"></textarea>
+<button class="btn-green" onclick="addNews()">✅ Add News - Shows on Home</button>
+</div>
+
+<h3>📋 Current Ads (<span id="adCount">0</span>)</h3>
+<div id="adList"></div>
+
+<h3>📰 Current News (<span id="newsCount">0</span>)</h3>
+<div id="newsList"></div>
+
+<h3>💰 Advertise Requests</h3>
+<div class="card">
+<p class="muted">Businesses fill advertise.html → You see them here? For now, check WhatsApp / Email for requests. Approve only after MoMo payment received!</p>
+<p style="margin-top:8px"><b>MoMo Check:</b> Always confirm MoMo payment BEFORE you add ad!</p>
+</div>
+
+<button class="btn-red" onclick="logout()">🚪 Log Out</button>
+<button class="btn-grey" onclick="location.href='home.html'">🏠 Back to Home</button>
+</div>
+
+<script>
+// ===== YOUR NEW PASSWORD =====
+var ADMIN_PASSWORD = "marial_cuir";
+
+function login(){
+  var p = document.getElementById("passInput").value;
+  if(p === ADMIN_PASSWORD){
+    localStorage.setItem("sb_admin","yes");
+    showAdmin();
+  } else {
+    alert("❌ Wrong password!");
+  }
+}
+function showAdmin(){
+  document.getElementById("loginBox").style.display="none";
+  document.getElementById("adminBox").style.display="block";
+  renderLists();
+}
+function logout(){
+  localStorage.removeItem("sb_admin");
+  location.reload();
+}
+if(localStorage.getItem("sb_admin")==="yes"){ showAdmin(); }
+
+function addAd(){
+  var t=document.getElementById("adTitle").value;
+  var b=document.getElementById("adBusiness").value;
+  var d=document.getElementById("adDesc").value;
+  var pr=document.getElementById("adPrice").value;
+  if(!t || !b){ alert("Fill Title + Business!"); return; }
+  var ads=JSON.parse(localStorage.getItem("adminAds")||"[]");
+  ads.push({title:t,business:b,desc:d,price:pr,date:new Date().toISOString()});
+  localStorage.setItem("adminAds",JSON.stringify(ads));
+  alert("✅ Ad Added! Now shows on Home!");
+  document.getElementById("adTitle").value=""; document.getElementById("adBusiness").value=""; document.getElementById("adDesc").value=""; document.getElementById("adPrice").value="";
+  renderLists();
+}
+function addNews(){
+  var t=document.getElementById("newsTitle").value;
+  var b=document.getElementById("newsBody").value;
+  if(!t){ alert("Fill Title!"); return; }
+  var news=JSON.parse(localStorage.getItem("adminNews")||"[]");
+  news.push({title:t,body:b,date:new Date().toISOString()});
+  localStorage.setItem("adminNews",JSON.stringify(news));
+  alert("✅ News Added! Now shows on Home!");
+  document.getElementById("newsTitle").value=""; document.getElementById("newsBody").value="";
+  renderLists();
+}
+function renderLists(){
+  var ads=JSON.parse(localStorage.getItem("adminAds")||"[]");
+  var news=JSON.parse(localStorage.getItem("adminNews")||"[]");
+  document.getElementById("adCount").innerText=ads.length;
+  document.getElementById("newsCount").innerText=news.length;
+  var ah=""; for(var i=0;i<ads.length;i++){ ah+="<div class='card'><b>"+ads[i].title+"</b><br><span class='muted'>"+ads[i].business+" • "+(ads[i].price||"")+"</span><br><button class='btn-red' onclick=\"delAd("+i+")\">🗑️ Delete</button></div>"; }
+  document.getElementById("adList").innerHTML=ah||"<p class='muted'>No ads yet</p>";
+  var nh=""; for(var j=0;j<news.length;j++){ nh+="<div class='card'><b>"+news[j].title+"</b><br><span class='muted'>"+news[j].body+"</span><br><button class='btn-red' onclick=\"delNews("+j+")\">🗑️ Delete</button></div>"; }
+  document.getElementById("newsList").innerHTML=nh||"<p class='muted'>No news yet</p>";
+}
+function delAd(i){ var ads=JSON.parse(localStorage.getItem("adminAds")||"[]"); ads.splice(i,1); localStorage.setItem("adminAds",JSON.stringify(ads)); renderLists(); }
+function delNews(i){ var news=JSON.parse(localStorage.getItem("adminNews")||"[]"); news.splice(i,1); localStorage.setItem("adminNews",JSON.stringify(news)); renderLists(); }
+</script>
+</body>
+</html>

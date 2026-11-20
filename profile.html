@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StreamBall - Profile</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:#0f172a;color:white;padding-bottom:80px}
+.top{padding:14px;display:flex;gap:8px}
+.top button{flex:1;padding:12px;border:none;border-radius:10px;font-weight:bold;cursor:pointer}
+.btn-green{background:#22c55e;color:black}
+.btn-grey{background:#1e293b;color:white}
+.tabs{display:flex;gap:8px;padding:0 14px;overflow-x:auto}
+.tabs button{background:#1e293b;color:white;border:1px solid #334155;padding:9px 16px;border-radius:20px;white-space:nowrap}
+.tabs button.active{background:#22c55e;color:black;font-weight:bold}
+.section{padding:14px}
+.card{background:#1e293b;border:1px solid #334155;border-radius:14px;padding:14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+.card b{font-size:15px}
+.muted{color:#94a3b8;font-size:12px}
+.logout{background:#7f1d1d;border:1px solid #ef4444}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#111827;display:flex;padding:8px 0 6px;border-top:1px solid #334155}
+.nav a{color:#94a3b8;text-decoration:none;text-align:center;font-size:10px;flex:1}
+.nav a.active{color:#22c55e}
+.nav span{display:block;font-size:19px}
+.team-box{background:#1e293b;border:1px solid #fbbf24;border-radius:14px;padding:14px;margin-bottom:10px}
+select{width:100%;padding:12px;border-radius:10px;background:#0f172a;color:white;border:1px solid #334155;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="top"><button class="btn-green" onclick="editProfile()">✏️ Edit Profile</button><button class="btn-grey" onclick="location.href='myteam.html'">⭐ My Team</button></div>
+<div class="tabs"><button class="active">👤 Profile</button><button onclick="alert('Settings: Notifications ON • Dark Mode ON')">⚙️ Settings</button><button onclick="alert('Notifications ON for your team')">🔔 Notifications</button></div>
+<div class="section">
+<h3 style="color:#fbbf24">⚙️ My Account</h3>
+<div class="team-box"><b>⭐ My Favourite Team</b><p class="muted" id="favText">Arsenal - 1st • 27 pts • Updated 20 Nov 2026</p><select id="favSelect" onchange="saveFav()"><option value="Arsenal">Arsenal</option><option value="Man City">Man City</option><option value="Liverpool">Liverpool</option><option value="Chelsea">Chelsea</option><option value="Man United">Man United</option><option value="Tottenham">Tottenham</option><option value="KCCA FC">KCCA FC 🇺🇬</option><option value="Vipers SC">Vipers SC 🇺🇬</option><option value="SC Villa">SC Villa 🇺🇬</option><option value="BUL FC">BUL FC 🇺🇬</option><option value="NEC FC">NEC FC 🇺🇬</option><option value="Barcelona">Barcelona</option><option value="Real Madrid">Real Madrid</option></select></div>
+<div class="card" onclick="editProfile()"><span><b>✏️ Edit Name & Email</b><br><span class="muted" id="userNameText">Fan • StreamBall</span></span><span>›</span></div>
+<div class="card" onclick="location.href='myteam.html'"><span><b>⭐ My Favourite Team - <span id="favName2">Arsenal</span></b></span><span>›</span></div>
+<div class="card" onclick="alert('Notifications ON for your team')"><span><b>🔔 Notifications</b><br><span class="muted">Get notified for your team</span></span><span>›</span></div>
+<div class="card" onclick="alert('Dark Mode ON')"><span><b>🌙 Dark Mode</b><br><span class="muted">Currently: Dark</span></span><span>›</span></div>
+<div class="card" onclick="alert('StreamBall - Global Football. Tables auto-updated via ESPN API. UPL via upl.co.ug. Updated 20 Nov 2026.')"><span><b>ℹ️ About StreamBall</b></span><span>›</span></div>
+<div style="background:#1e293b;border:1px solid #22c55e;border-radius:14px;padding:14px;margin-top:10px"><h3 style="color:#22c55e">📅 Next For Your Team</h3><p id="nextFixtureText" style="margin-top:6px"><b>Newcastle vs Arsenal</b><br><span class="muted">Sat 21 Nov • 18:30 • Premier League • St James Park</span></p><button class="btn-green" style="width:48%;margin-top:10px;padding:11px;border:none;border-radius:10px;font-weight:bold" onclick="location.href='fixtures.html'">📅 All Fixtures</button><button class="btn-grey" style="width:48%;margin-top:10px;padding:11px;border:none;border-radius:10px;font-weight:bold" onclick="location.href='myteam.html'">⭐ My Team</button></div>
+<div class="card logout" onclick="logout()"><span><b>🚪 Log Out</b></span><span>›</span></div>
+</div>
+<div class="nav">
+<a href="home.html"><span>🏠</span>Home</a>
+<a href="fixtures.html"><span>📅</span>Fixtures</a>
+<a href="live.html"><span>🔴</span>Live</a>
+<a href="watch.html"><span>▶️</span>Watch</a>
+<a href="myteam.html"><span>⭐</span>My Team</a>
+<a href="profile.html" class="active"><span>👤</span>Profile</a>
+</div>
+<script>
+var fav=localStorage.getItem("favTeam")||"Arsenal";
+document.getElementById("favSelect").value=fav; document.getElementById("favName2").innerText=fav;
+var ptsMap={"Arsenal":"Arsenal - 1st • 27 pts","Man City":"Man City - 3rd • 21 pts","Liverpool":"Liverpool - 4th • 18 pts","Chelsea":"Chelsea - 5th • 16 pts","Man United":"Man United - 18th • 8 pts","KCCA FC":"KCCA FC - 5th • 20 pts","Vipers SC":"Vipers SC - 6th • 17 pts","Barcelona":"Barcelona - 1st • 33 pts","Real Madrid":"Real Madrid - 2nd • 30 pts"};
+var nextGames={"Arsenal":"<b>Newcastle vs Arsenal</b><br><span class='muted'>Sat 21 Nov • 18:30 • Premier League • St James Park</span>","Man City":"<b>Man City vs Fulham</b><br><span class='muted'>Sat 21 Nov • 18:30 • Premier League • Etihad</span>","Liverpool":"<b>Liverpool vs Man United</b><br><span class='muted'>Sun 22 Nov • 19:30 • Premier League • Anfield</span>","Man United":"<b>Liverpool vs Man United</b><br><span class='muted'>Sun 22 Nov • 19:30 • Premier League • Anfield</span>","Chelsea":"<b>Chelsea vs Leeds</b><br><span class='muted'>Sat 21 Nov • 18:30 • Premier League • Stamford Bridge</span>","KCCA FC":"<b>KCCA FC vs URA FC</b><br><span class='muted'>Sat 22 Nov • 16:00 • UPL • MTN Omondi Stadium</span>","Vipers SC":"<b>Vipers SC vs BUL FC</b><br><span class='muted'>Sun 23 Nov • 16:00 • UPL • St Mary's Stadium</span>","Barcelona":"<b>Barcelona vs Villarreal</b><br><span class='muted'>Sun 22 Nov • 14:00 • LaLiga • Camp Nou</span>","Real Madrid":"<b>Real Madrid vs Celta Vigo</b><br><span class='muted'>Sat 21 Nov • 21:00 • LaLiga • Bernabeu</span>"};
+if(ptsMap[fav]) document.getElementById("favText").innerText=ptsMap[fav]+" • Updated 20 Nov 2026 • Auto";
+if(nextGames[fav]) document.getElementById("nextFixtureText").innerHTML=nextGames[fav];
+function saveFav(){var v=document.getElementById("favSelect").value; localStorage.setItem("favTeam",v); location.reload();}
+function editProfile(){var n=prompt("Your Name:",localStorage.getItem("userName")||""); if(n){localStorage.setItem("userName",n); location.reload();}}
+function logout(){if(confirm("Log out?")){localStorage.removeItem("userName"); location.href="home.html";}}
+var un=localStorage.getItem("userName"); if(un) document.getElementById("userNameText").innerText=un+" • StreamBall";
+async function tryUpdateFav(){
+  try{
+    var res=await fetch("https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/standings");
+    if(!res.ok) return; var data=await res.json(); var entries=data.children[0].standings.entries;
+    for(var i=0;i<entries.length;i++){ if(entries[i].team.displayName===fav || entries[i].team.displayName.replace("Manchester City","Man City").replace("Manchester United","Man United")===fav){ var pts=entries[i].stats.find(function(s){return s.name==="points"}); if(pts) document.getElementById("favText").innerText=fav+" - "+(i+1)+"th • "+pts.value+" pts • Live from ESPN • Auto"; break; } }
+  }catch(e){}
+}
+tryUpdateFav();
+</script>
+</body>
+</html>

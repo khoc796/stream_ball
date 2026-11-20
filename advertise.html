@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Advertise on StreamBall UG - Request</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:#0f172a;color:white;padding:16px}
+h1{color:#22c55e;text-align:center}
+.card{background:#1e293b;border:1px solid #334155;border-radius:14px;padding:16px;margin:14px 0}
+input,textarea,select{width:100%;padding:12px;border-radius:10px;border:1px solid #334155;background:#0f172a;color:white;outline:none;margin-top:8px}
+textarea{height:70px}
+button{width:100%;padding:14px;border:none;border-radius:10px;font-weight:bold;cursor:pointer;margin-top:10px}
+.btn-green{background:#22c55e;color:black}
+.btn-momo{background:#ffcc00;color:black}
+.muted{color:#94a3b8;font-size:12px}
+.price-box{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px}
+.price{border:2px solid #334155;border-radius:12px;padding:12px;text-align:center;cursor:pointer}
+.price.active{border-color:#22c55e;background:#14532d}
+.price b{color:#fbbf24;font-size:18px;display:block}
+.hidden{display:none}
+.step{border:2px solid #22c55e !important}
+</style>
+</head>
+<body>
+<h1>📢 Advertise on<br>StreamBall UG</h1>
+<p style="text-align:center" class="muted">Reach 1000s of football fans in Kampala every weekend!</p>
+
+<!-- STEP 1 - REQUEST - NO MONEY YET -->
+<div class="card step" id="step1">
+<h3>📝 Step 1: Make a Request - FREE, No Money Yet!</h3>
+<p class="muted">Tell us about your business. Admin will approve you, then you pay via MoMo.</p>
+<input id="bizName" placeholder="Business Name * e.g. Kikuubo Jersey Shop">
+<input id="bizPhone" placeholder="Your Phone / WhatsApp * e.g. 077...">
+<input id="adTitle" placeholder="Ad Title * e.g. Jersey 50k Only!">
+<textarea id="adDesc" placeholder="What do you sell?"></textarea>
+<input id="adImage" placeholder="Ad Image Link - Paste photo link (optional)">
+<input id="adLink" placeholder="WhatsApp Link - e.g. https://wa.me/256...">
+<p style="margin-top:10px"><b>Choose Package *</b></p>
+<div class="price-box">
+<div class="price" onclick="selectPrice(100000,7,this)"><b>UGX 100k</b><span class="muted">7 Days</span></div>
+<div class="price active" onclick="selectPrice(300000,30,this)"><b>UGX 300k</b><span class="muted">30 Days 🔥</span></div>
+<div class="price" onclick="selectPrice(700000,90,this)"><b>UGX 700k</b><span class="muted">90 Days</span></div>
+</div>
+<button class="btn-green" onclick="sendRequest()">📩 Send Request - No Payment Yet!</button>
+<p class="muted" style="text-align:center;margin-top:8px">Admin will contact you on WhatsApp in 1-2 hours to approve.</p>
+</div>
+
+<!-- STEP 2 - AFTER APPROVAL - NOW PAY -->
+<div class="card hidden" id="step2">
+<h3 style="color:#ffcc00">✅ Step 2: You Are Approved! Now Pay via MoMo</h3>
+<p>Admin approved your request! Now send MoMo:</p>
+<p style="font-size:22px;font-weight:bold;margin:8px 0" id="payToText">Loading...</p>
+<p class="muted" id="payNameText"></p>
+<p style="margin-top:10px;background:#ffcc00;color:black;padding:10px;border-radius:10px;font-weight:bold;text-align:center">Dial: *165# → Send Money → Enter Number Above<br>Use your Business Name as Reason!</p>
+<p style="margin-top:10px"><b>After you send MoMo, enter Transaction ID:</b></p>
+<input id="transId" placeholder="MoMo Transaction ID * - From your MoMo SMS e.g. 1234567890">
+<button class="btn-momo" onclick="confirmPayment()">📱 I Have Sent MoMo - Confirm Payment!</button>
+</div>
+
+<!-- SUCCESS -->
+<div class="card hidden" id="step3">
+<h3>🎉 Request Sent!</h3>
+<p>Thank you! Admin will check your request and contact you on WhatsApp soon.</p>
+<p class="muted" style="margin-top:8px">Don't send money yet! Wait for Admin to approve you first.</p>
+<button class="btn-green" onclick="location.reload()">Make Another Request</button>
+</div>
+
+<div class="card">
+<h3>❓ How It Works - Safe For You!</h3>
+<p class="muted" style="line-height:1.6">1. You send REQUEST (FREE, no money)<br>2. Admin calls you on WhatsApp, approves you<br>3. THEN you send MoMo to admin number<br>4. You enter Transaction ID<br>5. Admin checks MoMo SMS → Your ad goes LIVE!<br><br>✅ You never pay before approval! 100% Safe!</p>
+</div>
+
+<script>
+var selectedPrice=300000; var selectedDays=30; var myRequestId="";
+function selectPrice(price,days,el){ selectedPrice=price; selectedDays=days; document.querySelectorAll('.price').forEach(function(p){ p.classList.remove('active'); }); el.classList.add('active'); }
+var momoNum=localStorage.getItem("myMomoNumber")||"Admin will give you number after approval";
+var momoName=localStorage.getItem("myMomoName")||"";
+document.getElementById("payToText").innerText=momoNum;
+document.getElementById("payNameText").innerText=momoName?("Name: "+momoName):"";
+function sendRequest(){
+  var biz=document.getElementById("bizName").value.trim();
+  var phone=document.getElementById("bizPhone").value.trim();
+  var title=document.getElementById("adTitle").value.trim();
+  var desc=document.getElementById("adDesc").value.trim();
+  var image=document.getElementById("adImage").value.trim();
+  var link=document.getElementById("adLink").value.trim();
+  if(!biz||!phone||!title) return alert("Fill Business, Phone, Title!");
+  myRequestId="REQ"+Date.now();
+  var reqs=JSON.parse(localStorage.getItem("adRequests")||"[]");
+  reqs.push({id:myRequestId,business:biz,phone:phone,title:title,desc:desc,image:image,link:link,price:selectedPrice,days:selectedDays,status:"REQUESTED",date:new Date().toLocaleDateString()+" "+new Date().toLocaleTimeString()});
+  localStorage.setItem("adRequests", JSON.stringify(reqs));
+  localStorage.setItem("myLastRequest", myRequestId);
+  document.getElementById("step1").classList.add("hidden");
+  document.getElementById("step3").classList.remove("hidden");
+  alert("✅ Request Sent! Admin will contact you on "+phone+" soon. Don't send money yet!");
+}
+function confirmPayment(){
+  var trans=document.getElementById("transId").value.trim();
+  if(!trans) return alert("Enter Transaction ID from MoMo SMS!");
+  var reqs=JSON.parse(localStorage.getItem("adRequests")||"[]");
+  var lastId=localStorage.getItem("myLastRequest");
+  // Also check pending list
+  var pending=JSON.parse(localStorage.getItem("pendingAds")||"[]");
+  // Find my request
+  for(var i=0;i<reqs.length;i++){ if(reqs[i].id===lastId){ reqs[i].transId=trans; reqs[i].status="PAID_WAITING"; pending.push(reqs[i]); break; } }
+  localStorage.setItem("adRequests", JSON.stringify(reqs));
+  localStorage.setItem("pendingAds", JSON.stringify(pending));
+  alert("✅ Payment Submitted! Admin will check MoMo Trans ID: "+trans+" and make your ad LIVE!");
+  document.getElementById("step2").classList.add("hidden");
+  document.getElementById("step3").classList.remove("hidden");
+  document.querySelector("#step3 h3").innerText="🎉 Payment Sent! Waiting for Admin to Go Live!";
+}
+// If this business was already approved, show Step 2 directly
+try{
+  var lastId=localStorage.getItem("myLastRequest");
+  var reqs=JSON.parse(localStorage.getItem("adRequests")||"[]");
+  for(var i=0;i<reqs.length;i++){ if(reqs[i].id===lastId && reqs[i].status==="APPROVED"){ document.getElementById("step1").classList.add("hidden"); document.getElementById("step2").classList.remove("hidden"); } }
+}catch(e){}
+</script>
+</body>
+</html>

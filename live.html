@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StreamBall - Live</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:#0f172a;color:white;padding-bottom:80px}
+.header{background:#7f1d1d;padding:16px;text-align:center}
+.tabs{display:flex;gap:6px;padding:14px;overflow-x:auto}
+.tabs button{background:#1e293b;color:white;border:1px solid #334155;padding:9px 14px;border-radius:20px;white-space:nowrap;font-size:12px}
+.tabs button.active{background:#ef4444;color:white;font-weight:bold}
+.section{padding:0 14px}
+.card{background:#1e293b;border:1px solid #334155;border-radius:14px;padding:14px;margin-bottom:10px}
+.card.live{border-left:4px solid #ef4444}
+.muted{color:#94a3b8;font-size:12px}
+.score{font-size:22px;font-weight:bold;text-align:center}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#111827;display:flex;padding:8px 0 6px;border-top:1px solid #334155}
+.nav a{color:#94a3b8;text-decoration:none;text-align:center;font-size:10px;flex:1}
+.nav a.active{color:#ef4444}
+.nav span{display:block;font-size:19px}
+.live-dot{color:#ef4444;animation:blink 1s infinite}
+@keyframes blink{50%{opacity:0.3}}
+</style>
+</head>
+<body>
+<div class="header"><h1>🔴 Live Scores</h1><p>● <span id="updateTime">Auto-refresh every 30 sec</span></p></div>
+<div class="tabs"><button class="active">🔴 All Live</button><button onclick="location.href='fixtures.html'">📅 Fixtures</button><button onclick="location.href='home.html'">🏠 Home</button></div>
+<div class="section"><div id="liveList"><div style="text-align:center;padding:20px;color:#94a3b8">😴 No live games right now.<br><small>Next: Newcastle vs Arsenal Sat 21 Nov 18:30</small></div></div></div>
+<div class="nav">
+<a href="home.html"><span>🏠</span>Home</a>
+<a href="fixtures.html"><span>📅</span>Fixtures</a>
+<a href="live.html" class="active"><span>🔴</span>Live</a>
+<a href="watch.html"><span>▶️</span>Watch</a>
+<a href="profile.html"><span>👤</span>Profile</a>
+</div>
+<script>
+async function fetchLive(){
+  try{
+    var leagues=["eng.1","esp.1","ita.1","ger.1","fra.1"];
+    var html=""; var found=0;
+    for(var li=0;li<leagues.length;li++){
+      try{
+        var res=await fetch("https://site.api.espn.com/apis/site/v2/sports/soccer/"+leagues[li]+"/scoreboard");
+        if(!res.ok) continue; var data=await res.json();
+        var evs=data.events||[];
+        for(var i=0;i<evs.length;i++){var ev=evs[i]; if(ev.status && ev.status.type && ev.status.type.state==="in"){
+          var c=ev.competitions[0].competitors; var h=c.find(function(x){return x.homeAway==="home"}); var a=c.find(function(x){return x.homeAway==="away"});
+          html+="<div class='card live'><span class='live-dot'>● LIVE</span> "+ev.status.displayClock+" • "+ev.competitions[0].venue.fullName+"<div style='display:flex;justify-content:space-between;align-items:center;margin-top:8px'><b>"+h.team.displayName+"</b><div class='score'>"+h.score+" - "+a.score+"</div><b>"+a.team.displayName+"</b></div></div>"; found++;
+        }}
+      }catch(e){}
+    }
+    if(found){document.getElementById("liveList").innerHTML=html; document.getElementById("updateTime").innerText="● "+found+" live games • Updated "+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}
+    else{document.getElementById("liveList").innerHTML="<div style='text-align:center;padding:20px;color:#94a3b8'>😴 No live games right now.<br><small>Next: Newcastle vs Arsenal Sat 21 Nov 18:30</small><br><br><button onclick=\"location.href='fixtures.html'\" style='background:#22c55e;border:none;padding:12px 20px;border-radius:10px;font-weight:bold'>📅 View Fixtures</button></div>"; document.getElementById("updateTime").innerText="Auto-refresh every 30 sec • Last check "+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}
+  }catch(e){}
+}
+fetchLive(); setInterval(fetchLive, 30*1000);
+</script>
+</body>
+</html>
