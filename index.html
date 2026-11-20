@@ -6,75 +6,135 @@
 <title>Stream Ball - Home</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
-body{background:#0f172a;color:white;padding-bottom:80px}
+body{background:#0f172a;color:white;padding-bottom:90px}
 .header{background:#1e293b;padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
-.header b{font-size:20px}
-.header b span{color:#22c55e}
-.search{width:100%;margin:12px 16px;width:calc(100% - 32px);padding:10px;border-radius:10px;border:none;background:#1e293b;color:white}
-.tabs{display:flex;gap:8px;overflow-x:auto;padding:0 16px 10px;white-space:nowrap}
-.tabs button{padding:8px 14px;border-radius:20px;border:none;background:#1e293b;color:#94a3b8;cursor:pointer}
-.tabs button.active{background:#22c55e;color:white}
+.header b{font-size:20px}.header b span{color:#22c55e}
+.search{margin:12px 16px;width:calc(100% - 32px);padding:11px;border-radius:10px;border:none;background:#1e293b;color:white;outline:none}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:0 16px 12px;white-space:nowrap;scrollbar-width:none}
+.tabs button{padding:8px 14px;border-radius:20px;border:none;background:#1e293b;color:#94a3b8;cursor:pointer;white-space:nowrap}
+.tabs button.active{background:#22c55e;color:white;font-weight:bold}
 .card{background:#1e293b;margin:0 16px 16px;border-radius:14px;padding:14px}
-.card h3{margin-bottom:10px}
+.card h3{margin-bottom:10px;color:#facc15;font-size:19px}
 table{width:100%;border-collapse:collapse;font-size:13px}
-th{color:#94a3b8;text-align:left;padding:6px 4px}
-td{padding:8px 4px;border-top:1px solid #334155}
-.top-toggle{display:flex;background:#0f172a;border-radius:10px;padding:4px;margin-bottom:10px}
-.top-toggle button{flex:1;padding:8px;border:none;border-radius:8px;background:transparent;color:#94a3b8;cursor:pointer}
-.top-toggle button.active{background:#22c55e;color:white}
-.player{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid #334155}
-.num{width:22px;text-align:center;color:#94a3b8}
-.avatar{width:36px;height:36px;border-radius:50%;background:#334155;display:flex;align-items:center;justify-content:center;font-weight:bold}
-.bottom{position:fixed;bottom:0;left:0;right:0;background:#1e293b;display:flex;justify-content:space-around;padding:10px 0;border-top:1px solid #334155}
-.bottom div{text-align:center;font-size:12px;color:#94a3b8}
+th{color:#94a3b8;text-align:left;padding:6px 4px;font-weight:normal}
+td{padding:9px 4px;border-top:1px solid #334155}
+td:last-child{color:#22c55e;font-weight:bold;text-align:right}
+.updated{background:#fef9c3;color:#14532d;padding:10px;border-radius:10px;font-size:13px;margin-bottom:12px}
+.updated2{text-align:center;color:#94a3b8;font-size:12px;margin:8px 0 14px}
+.top-toggle{display:flex;background:#0f172a;border-radius:12px;padding:4px;margin-bottom:12px;gap:4px}
+.top-toggle button{flex:1;padding:10px;border:none;border-radius:9px;background:transparent;color:white;cursor:pointer;font-size:15px}
+.top-toggle button.active{background:#22c55e;color:white;font-weight:bold}
+.league-pills{display:flex;gap:8px;overflow-x:auto;margin-bottom:12px;white-space:nowrap}
+.league-pills button{padding:8px 14px;border-radius:20px;border:none;background:#334155;color:white;cursor:pointer;white-space:nowrap}
+.league-pills button.active{background:#22c55e;color:black;font-weight:bold}
+.match{display:flex;justify-content:space-between;align-items:center;padding:12px 4px;border-top:1px solid #334155}
+.match b{flex:1}.live-dot{color:#ef4444;font-weight:bold;font-size:12px}
+.watch-box{background:#0f172a;border-radius:12px;padding:30px 10px;text-align:center;margin-bottom:12px;font-size:40px}
+.watch-box p{font-size:13px;color:#94a3b8;margin-top:8px}
+.btn-green{background:#22c55e;color:white;border:none;padding:12px;width:100%;border-radius:10px;font-weight:bold;margin-top:10px;cursor:pointer}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:#1e293b;display:flex;justify-content:space-around;padding:10px 0;border-top:1px solid #334155;z-index:99}
+.bottom div{text-align:center;font-size:12px;color:#94a3b8;cursor:pointer;flex:1;padding:4px 0}
 .bottom div.active{color:#22c55e}
+.page{display:none}.page.active{display:block}
 </style>
 </head>
 <body>
 
-<div class="header"><b>Stream<span>Ball</span></b><span>🔔 👤</span></div>
+<div class="header"><b>Stream<span>Ball</span></b><span onclick="showPage('profile')" style="cursor:pointer">🔔 👤</span></div>
+
+<!-- HOME PAGE -->
+<div id="page-home" class="page active">
 <input class="search" placeholder="Search teams, players...">
-
 <div class="tabs" id="leagueTabs"></div>
-
 <div class="card">
 <h3>Standings</h3>
-<table>
-<thead><tr><th>#</th><th>Team</th><th>P</th><th>W</th><th>D</th><th>L</th><th>Pts</th></tr></thead>
-<tbody id="standBody"></tbody>
-</table>
+<table><thead><tr><th>#</th><th>Team</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GD</th><th>Pts</th></tr></thead><tbody id="standBody"></tbody></table>
+<div class="updated2">✅ Updated 20 Nov 2026 • Auto-Fetch tries in background • If offline, shows last saved table</div>
+</div>
+<div class="card">
+<h3>⚽ Top Scorers</h3>
+<div class="updated">✅ Updated 20 Nov 2026</div>
+<div class="top-toggle">
+<button id="btnScorers" class="active" onclick="setTop('scorers')">⚽ Scorers</button>
+<button id="btnAssists" onclick="setTop('assists')">🎯 Assists</button>
+</div>
+<div class="league-pills" id="topLeaguePills"></div>
+<table><thead><tr><th>#</th><th>Player</th><th>Team</th><th id="topColHead" style="text-align:right">Goals</th></tr></thead><tbody id="topBody"></tbody></table>
+</div>
 </div>
 
-<div class="card">
-<h3>Top Scorers</h3>
-<div class="top-toggle">
-<button id="btnScorers" class="active" onclick="setTop('scorers')">Scorers</button>
-<button id="btnAssists" onclick="setTop('assists')">Assists</button>
+<!-- FIXTURES PAGE -->
+<div id="page-fixtures" class="page">
+<div class="card"><h3>📅 Fixtures</h3>
+<div class="match"><b>Arsenal vs Chelsea</b><span>Sat 22 Nov • 18:30</span></div>
+<div class="match"><b>Man City vs Liverpool</b><span>Sun 23 Nov • 17:30</span></div>
+<div class="match"><b>Real Madrid vs Barcelona</b><span>Sun 23 Nov • 21:00</span></div>
+<div class="match"><b>Bayern vs Leipzig</b><span>Sat 22 Nov • 19:30</span></div>
 </div>
-<div id="topBody"></div>
+</div>
+
+<!-- LIVE PAGE -->
+<div id="page-live" class="page">
+<div class="card"><h3>🔴 Live Now</h3>
+<div class="match"><b>Tottenham 1 - 1 Newcastle</b><span class="live-dot">● 67'</span></div>
+<div class="match"><b>Man United 2 - 0 Fulham</b><span class="live-dot">● 54'</span></div>
+<div class="match"><b>Brighton 0 - 0 Brentford</b><span class="live-dot">● 32'</span></div>
+</div>
+</div>
+
+<!-- WATCH PAGE -->
+<div id="page-watch" class="page">
+<div class="card"><h3>▶️ Watch</h3>
+<div class="watch-box">▶️<p>Arsenal 3-1 Chelsea - Highlights</p><button class="btn-green" onclick="alert('Video will play here - add your link!')">▶ Play Highlights</button></div>
+<div class="watch-box">▶️<p>Haaland All Goals This Season</p><button class="btn-green" onclick="alert('Video will play here - add your link!')">▶ Play Video</button></div>
+</div>
+</div>
+
+<!-- PROFILE PAGE -->
+<div id="page-profile" class="page">
+<div class="card"><h3>👤 Profile</h3>
+<p style="font-size:40px;text-align:center">👤</p><p style="text-align:center;margin:8px 0">Guest User</p>
+<p style="color:#94a3b8;text-align:center;font-size:13px">Favourite Team: Arsenal</p>
+<button class="btn-green" onclick="alert('Login coming soon!')">Login / Sign Up</button>
+<button class="btn-green" style="background:#334155" onclick="showPage('home')">Back to Home</button>
+</div>
 </div>
 
 <div class="bottom">
-<div class="active">🏠<br>Home</div><div>📅<br>Fixtures</div><div>🔴<br>Live</div><div>▶️<br>Watch</div><div>👤<br>Profile</div>
+<div id="nav-home" class="active" onclick="showPage('home')">🏠<br>Home</div>
+<div id="nav-fixtures" onclick="showPage('fixtures')">📅<br>Fixtures</div>
+<div id="nav-live" onclick="showPage('live')">🔴<br>Live</div>
+<div id="nav-watch" onclick="showPage('watch')">▶️<br>Watch</div>
+<div id="nav-profile" onclick="showPage('profile')">👤<br>Profile</div>
 </div>
 
 <script>
+var curLeague = "Premier League";
 var curTopLeague = "Premier League";
 var curTop = "scorers";
-
-// STANDINGS - Premier League example
+function showPage(p){
+var pages = ["home","fixtures","live","watch","profile"];
+for(var i=0;i<pages.length;i++){
+document.getElementById("page-"+pages[i]).className = "page" + (pages[i]===p ? " active" : "");
+document.getElementById("nav-"+pages[i]).className = pages[i]===p ? "active" : "";
+}
+window.scrollTo(0,0);
+}
 var standings = {
 "Premier League":[
-["Arsenal",11,8,2,1,26],["Man City",11,7,2,2,23],["Chelsea",11,6,2,3,20],
-["Tottenham",11,5,3,3,18],["Liverpool",11,5,3,3,18],["Man United",11,2,2,7,8]
+["Arsenal",10,8,2,0,14,26],["Man City",10,7,2,1,10,23],["Chelsea",10,6,2,2,5,20],
+["Liverpool",10,6,2,2,6,20],["Tottenham",10,5,3,2,4,18],["Brighton",10,5,2,3,3,17],
+["Everton",10,4,3,3,1,15],["Bournemouth",10,4,2,4,0,14],["Brentford",10,4,1,5,-2,13],
+["Aston Villa",10,3,4,3,-3,13],["West Ham",10,3,3,4,-1,12],["Newcastle",10,3,3,4,-3,12],
+["Hull City",10,3,2,5,0,11],["Ipswich",10,3,2,5,-5,11],["Fulham",10,2,4,4,-4,10],
+["Nottm Forest",10,2,3,5,-4,9],["Coventry",10,2,3,5,-9,9],["Man United",10,1,5,4,-5,8],
+["Sunderland",10,2,2,6,-9,8],["Crystal Palace",10,2,1,7,-14,7]
 ],
-"LaLiga":[["Real Madrid",11,9,1,1,28],["Barcelona",11,8,2,1,26]],
-"Serie A":[["Lazio",11,8,2,1,26],["Roma",11,7,2,2,23]],
-"Bundesliga":[["Bayern",11,10,1,0,31],["Leipzig",11,7,2,2,23]],
-"Ligue 1":[["Lens",11,8,1,2,25],["Paris FC",11,7,3,1,24]]
+"LaLiga":[["Real Madrid",11,9,1,1,15,28],["Barcelona",11,8,2,1,14,26],["Villarreal",11,7,2,2,8,23]],
+"Serie A":[["Lazio",11,8,2,1,10,26],["Roma",11,7,2,2,7,23]],
+"Bundesliga":[["Bayern",11,10,1,0,25,31],["Leipzig",11,7,2,2,10,23]],
+"Ligue 1":[["Lens",11,8,1,2,10,25],["Paris FC",11,7,3,1,8,24]]
 };
-
-// TOP SCORERS AND ASSISTS - SEPARATE LISTS! THIS IS THE FIX!
 var fallback = {
 "Premier League":{
 scorers:[["Erling Haaland","Man City",9],["Alexander Isak","Liverpool",7],["Mohamed Salah","Liverpool",6]],
@@ -97,40 +157,20 @@ scorers:[["Lassine Sinayoko","Paris FC",9],["Amine Gouiri","Marseille",7]],
 assists:[["Florian Thauvin","Lens",7],["Cristian Casseress Jr","Toulouse",6]]
 }
 };
-
-function renderLeagues(){
+function renderAll(){
 var leagues = Object.keys(fallback);
-document.getElementById("leagueTabs").innerHTML = leagues.map(function(l){
-return '<button class="'+(l===curTopLeague?'active':'')+'" onclick="setLeague(\''+l+'\')">'+l+'</button>';
-}).join("");
-}
-function setLeague(l){
-curTopLeague = l;
-renderLeagues();
-renderStandings();
-showTop();
-}
-function setTop(type){
-curTop = type;
-document.getElementById("btnScorers").className = type==="scorers" ? "active" : "";
-document.getElementById("btnAssists").className = type==="assists" ? "active" : "";
-showTop();
-}
-function renderStandings(){
-var rows = standings[curTopLeague] || [];
-document.getElementById("standBody").innerHTML = rows.map(function(r,i){
-return "<tr><td>"+(i+1)+"</td><td>"+r[0]+"</td><td>"+r[1]+"</td><td>"+r[2]+"</td><td>"+r[3]+"</td><td>"+r[4]+"</td><td><b>"+r[5]+"</b></td></tr>";
-}).join("");
-}
-function showTop(){
+document.getElementById("leagueTabs").innerHTML = leagues.map(function(l){return '<button class="'+(l===curLeague?'active':'')+'" onclick="curLeague=\''+l+'\';curTopLeague=\''+l+'\';renderAll();">'+l+'</button>';}).join("");
+document.getElementById("topLeaguePills").innerHTML = leagues.map(function(l){return '<button class="'+(l===curTopLeague?'active':'')+'" onclick="curTopLeague=\''+l+'\';renderAll();">'+l+'</button>';}).join("");
+var s = standings[curLeague] || [];
+document.getElementById("standBody").innerHTML = s.map(function(r,i){return "<tr><td>"+(i+1)+"</td><td>"+r[0]+"</td><td>"+r[1]+"</td><td>"+r[2]+"</td><td>"+r[3]+"</td><td>"+r[4]+"</td><td>"+r[5]+"</td><td>"+r[6]+"</td></tr>";}).join("");
+document.getElementById("topColHead").innerText = curTop==="scorers" ? "Goals" : "Assists";
+document.getElementById("btnScorers").className = curTop==="scorers" ? "active" : "";
+document.getElementById("btnAssists").className = curTop==="assists" ? "active" : "";
 var rows = (fallback[curTopLeague] && fallback[curTopLeague][curTop]) || [];
-document.getElementById("topBody").innerHTML = rows.map(function(p,i){
-return '<div class="player"><div class="num">'+(i+1)+'</div><div class="avatar">'+p[0][0]+'</div><div style="flex:1"><b>'+p[0]+'</b><br><small style="color:#94a3b8">'+p[1]+'</small></div><b>'+p[2]+'</b></div>';
-}).join("");
+document.getElementById("topBody").innerHTML = rows.map(function(p,i){var medal = i===0 ? "🥇 " : "";return "<tr><td>"+(i+1)+"</td><td>"+medal+p[0]+"</td><td>"+p[1]+"</td><td style='color:#22c55e;font-weight:bold;text-align:right'>"+p[2]+"</td></tr>";}).join("");
 }
-renderLeagues();
-renderStandings();
-showTop();
+function setTop(t){ curTop = t; renderAll(); }
+renderAll();
 </script>
 </body>
 </html>>
