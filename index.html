@@ -27,9 +27,6 @@ td:last-child{color:#22c55e;font-weight:bold;text-align:right}
 .league-pills{display:flex;gap:8px;overflow-x:auto;margin-bottom:12px;white-space:nowrap}
 .league-pills button{padding:8px 14px;border-radius:20px;border:none;background:#334155;color:white;cursor:pointer;white-space:nowrap}
 .league-pills button.active{background:#22c55e;color:black;font-weight:bold}
-.player{display:flex;align-items:center;gap:10px;padding:10px 4px;border-top:1px solid #334155}
-.num{width:20px;color:#94a3b8}
-.avatar{width:36px;height:36px;border-radius:50%;background:#334155;display:flex;align-items:center;justify-content:center;font-weight:bold}
 .bottom{position:fixed;bottom:0;left:0;right:0;background:#1e293b;display:flex;justify-content:space-around;padding:10px 0;border-top:1px solid #334155}
 .bottom div{text-align:center;font-size:12px;color:#94a3b8}
 .bottom div.active{color:#22c55e}
@@ -39,7 +36,6 @@ td:last-child{color:#22c55e;font-weight:bold;text-align:right}
 
 <div class="header"><b>Stream<span>Ball</span></b><span>🔔 👤</span></div>
 <input class="search" placeholder="Search teams, players...">
-
 <div class="tabs" id="leagueTabs"></div>
 
 <div class="card">
@@ -73,13 +69,12 @@ td:last-child{color:#22c55e;font-weight:bold;text-align:right}
 var curLeague = "Premier League";
 var curTopLeague = "Premier League";
 var curTop = "scorers";
-
 var standings = {
 "Premier League":[
 ["Arsenal",10,8,2,0,14,26],["Man City",10,7,2,1,10,23],["Chelsea",10,6,2,2,5,20],
 ["Liverpool",10,6,2,2,6,20],["Tottenham",10,5,3,2,4,18],["Brighton",10,5,2,3,3,17],
 ["Everton",10,4,3,3,1,15],["Bournemouth",10,4,2,4,0,14],["Brentford",10,4,1,5,-2,13],
-["Aston Villa",10,3,4,3,-3,13],["Tottenham",10,3,3,4,-1,12],["Newcastle",10,3,3,4,-3,12],
+["Aston Villa",10,3,4,3,-3,13],["West Ham",10,3,3,4,-1,12],["Newcastle",10,3,3,4,-3,12],
 ["Hull City",10,3,2,5,0,11],["Ipswich",10,3,2,5,-5,11],["Fulham",10,2,4,4,-4,10],
 ["Nottm Forest",10,2,3,5,-4,9],["Coventry",10,2,3,5,-9,9],["Man United",10,1,5,4,-5,8],
 ["Sunderland",10,2,2,6,-9,8],["Crystal Palace",10,2,1,7,-14,7]
@@ -89,12 +84,10 @@ var standings = {
 "Bundesliga":[["Bayern",11,10,1,0,25,31],["Leipzig",11,7,2,2,10,23]],
 "Ligue 1":[["Lens",11,8,1,2,10,25],["Paris FC",11,7,3,1,8,24]]
 };
-
-// *** FIXED: SCORERS AND ASSISTS ARE DIFFERENT! ***
 var fallback = {
 "Premier League":{
-scorers:[["Erling Haaland","Man City",9],["Alexander Isak","Liverpool",7],["Mohamed Salah","Liverpool",6],["Harry Kane","Bayern",6]],
-assists:[["Bukayo Saka","Arsenal",7],["Mohamed Salah","Liverpool",6],["Bruno Fernandes","Man United",5],["Lamine Yamal","Barcelona",5]]
+scorers:[["Erling Haaland","Man City",9],["Alexander Isak","Liverpool",7],["Mohamed Salah","Liverpool",6]],
+assists:[["Bukayo Saka","Arsenal",7],["Mohamed Salah","Liverpool",6],["Bruno Fernandes","Man United",5]]
 },
 "LaLiga":{
 scorers:[["Kylian Mbappe","Real Madrid",12],["Robert Lewandowski","Barcelona",9]],
@@ -113,27 +106,17 @@ scorers:[["Lassine Sinayoko","Paris FC",9],["Amine Gouiri","Marseille",7]],
 assists:[["Florian Thauvin","Lens",7],["Cristian Casseress Jr","Toulouse",6]]
 }
 };
-
 function renderAll(){
 var leagues = Object.keys(fallback);
-document.getElementById("leagueTabs").innerHTML = leagues.map(function(l){
-return '<button class="'+(l===curLeague?'active':'')+'" onclick="curLeague=\''+l+'\';curTopLeague=\''+l+'\';renderAll();">'+l+'</button>';
-}).join("");
-document.getElementById("topLeaguePills").innerHTML = leagues.map(function(l){
-return '<button class="'+(l===curTopLeague?'active':'')+'" onclick="curTopLeague=\''+l+'\';renderAll();">'+l+'</button>';
-}).join("");
+document.getElementById("leagueTabs").innerHTML = leagues.map(function(l){return '<button class="'+(l===curLeague?'active':'')+'" onclick="curLeague=\''+l+'\';curTopLeague=\''+l+'\';renderAll();">'+l+'</button>';}).join("");
+document.getElementById("topLeaguePills").innerHTML = leagues.map(function(l){return '<button class="'+(l===curTopLeague?'active':'')+'" onclick="curTopLeague=\''+l+'\';renderAll();">'+l+'</button>';}).join("");
 var s = standings[curLeague] || [];
-document.getElementById("standBody").innerHTML = s.map(function(r,i){
-return "<tr><td>"+(i+1)+"</td><td>"+r[0]+"</td><td>"+r[1]+"</td><td>"+r[2]+"</td><td>"+r[3]+"</td><td>"+r[4]+"</td><td>"+r[5]+"</td><td>"+r[6]+"</td></tr>";
-}).join("");
+document.getElementById("standBody").innerHTML = s.map(function(r,i){return "<tr><td>"+(i+1)+"</td><td>"+r[0]+"</td><td>"+r[1]+"</td><td>"+r[2]+"</td><td>"+r[3]+"</td><td>"+r[4]+"</td><td>"+r[5]+"</td><td>"+r[6]+"</td></tr>";}).join("");
 document.getElementById("topColHead").innerText = curTop==="scorers" ? "Goals" : "Assists";
 document.getElementById("btnScorers").className = curTop==="scorers" ? "active" : "";
 document.getElementById("btnAssists").className = curTop==="assists" ? "active" : "";
 var rows = (fallback[curTopLeague] && fallback[curTopLeague][curTop]) || [];
-document.getElementById("topBody").innerHTML = rows.map(function(p,i){
-var medal = i===0 ? "🥇 " : "";
-return "<tr><td>"+(i+1)+"</td><td>"+medal+p[0]+"</td><td>"+p[1]+"</td><td style='color:#22c55e;font-weight:bold;text-align:right'>"+p[2]+"</td></tr>";
-}).join("");
+document.getElementById("topBody").innerHTML = rows.map(function(p,i){var medal = i===0 ? "🥇 " : "";return "<tr><td>"+(i+1)+"</td><td>"+medal+p[0]+"</td><td>"+p[1]+"</td><td style='color:#22c55e;font-weight:bold;text-align:right'>"+p[2]+"</td></tr>";}).join("");
 }
 function setTop(t){ curTop = t; renderAll(); }
 renderAll();
